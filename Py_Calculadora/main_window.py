@@ -11,6 +11,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.cw)
         self.setWindowTitle("Calculadora")
 
-        def adjustFixedSize(self) -> None:
-            self.adjustSize()
-            self.setFixedSize(self.width(), self.height())
+    def adjustFixedSize(self) -> None:
+        self.adjustSize()
+        self.setFixedSize(self.width(), self.height())
