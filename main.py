@@ -2,7 +2,7 @@ import sys
 from PySide6.QtWidgets import (
     QApplication,
     QPushButton,
-    QVBoxLayout,
+    QGridLayout,  # Grid tem mais recursos de layout
     QWidget)
 
 app = QApplication(sys.argv)
@@ -15,10 +15,10 @@ botao2.setStyleSheet('font-size: 40px')
 botao2.show()
 
 central_widget = QWidget()
-layout = QVBoxLayout()  # Column
+layout = QGridLayout()  # Column
 central_widget.setLayout(layout)
-layout.addWidget(botao)
-layout.addWidget(botao2)
+layout.addWidget(botao, 1, 1)  # Mesma row; column diferente
+layout.addWidget(botao2, 1, 2)
 
 central_widget.show()
 app.exec()
