@@ -9,3 +9,4 @@ class MainWindow(QMainWindow):
         self.v_layout = QVBoxLayout()
         self.cw.setLayout(self.v_layout)
         self.setCentralWidget(self.cw)
+        self.setWindowTitle("Calculadora")
