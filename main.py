@@ -1,11 +1,9 @@
-# type: ignore
 import sys
-from pySide6.QtWidgts import QAplication
+from PySide6.QtWidgets import QApplication, QPushButton
 
+app = QApplication(sys.argv)
 
-app = QAplication()
-
-botton = QPushButton("Texto do botão")
+botao = QPushButton("Texto do botão")
 botao.show()
 
 app.exec()
