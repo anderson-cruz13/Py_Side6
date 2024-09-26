@@ -20,6 +20,7 @@ app = QApplication(sys.argv)
 window = QMainWindow()
 central_widget = QWidget()
 window.setCentralWidget(central_widget)
+window.setWindowTitle("Janela principal")
 
 botao = QPushButton("Texto do botão")
 botao.setStyleSheet('font-size: 80px')
