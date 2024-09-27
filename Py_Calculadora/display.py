@@ -4,13 +4,13 @@ from PySide6.QtCore import Qt
 
 
 class Display(QLineEdit):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.configStyle()
 
-    def configStyle(self):
+    def configStyle(self) -> None:
         margins = [TEXT_MARGIN for _ in range(4)]
-        self.setStyleSheet(f'font-size: {BIG_FONT_SIZE}px')
+        self.setStyleSheet(f'font-size: {BIG_FONT_SIZE}px;')
         self.setMinimumHeight(BIG_FONT_SIZE * 2)
         self.setMinimumWidth(MINIMUM_WIDTH)
         self.setAlignment(Qt.AlignmentFlag.AlignRight)
