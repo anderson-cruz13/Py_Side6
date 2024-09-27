@@ -21,5 +21,6 @@ if __name__ == "__main__":
     window.addToVLayout(display)
 
     # Loop de execução
+    window.adjustFixedSize()
     window.show()
     app.exec()
