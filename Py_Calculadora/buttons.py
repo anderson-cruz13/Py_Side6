@@ -17,3 +17,11 @@ class Button(QPushButton):
 class ButtonsGrid(QGridLayout):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self._grid_mask = [
+            ['C', '<', '^', '/'],
+            ['7', '8', '9', '*'],
+            ['4', '5', '6', '-'],
+            ['1', '2', '3', '+'],
+            ['', '0', '.', '=']
+        ]
