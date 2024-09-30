@@ -88,6 +88,9 @@ class ButtonsGrid(QGridLayout):
                 self._makeSlot(self._operatorClicked, button)
             )
 
+        if text in '=':
+            self._connectButtonClicked(button, self._eq)
+
     def _makeSlot(self, func, *args, **kwargs):
         @Slot(bool)
         def realSlot(_):
@@ -110,7 +113,7 @@ class ButtonsGrid(QGridLayout):
         self.equation = self._equationInitialValue
         self.display.clear()
 
-    def _operatorClicked(self, button):
+    def _operatorClicked(self, button) -> None:
         buttonText = button.text()
         displayText = self.display.text()
         self.display.clear()
@@ -123,3 +126,35 @@ class ButtonsGrid(QGridLayout):
 
         self._op = buttonText
         self.equation = f'{self._left} {self._op} ??'
+
+    def _eq(self) -> None:
+        displayText = self.display.text()
+
+        if not isValidNumber(displayText):
+            return
+
+        self._right = float(displayText)
+        self.equation = f'{self._left} {self._op} {self._right}'
+        self._availableEquation()
+
+    def _availableEquation(self) -> None:
+        if self._left is not None and self._right is not None:
+            if self._op == '+':
+                result = self._left + self._right
+            elif self._op == '-':
+                result = self._left - self._right
+            elif self._op == '*':
+                result = self._left * self._right
+            elif self._op == '/' and self._right != 0:
+                result = self._left / self._right
+            else:
+                result = "ERROR"
+                self.display.clear()
+
+            self.display.clear()
+            self.info.setText(str(result))
+            self._left = float(result)
+            self._right = None
+        else:
+            self.info.setText("ERROR")
+            self.display.clear()
