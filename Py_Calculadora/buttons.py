@@ -10,6 +10,7 @@ from utils import isNumOrDot, isValidNumber
 if TYPE_CHECKING:
     from display import Display
     from info import Info
+    from main_window import MainWindow
 
 
 class Button(QPushButton):
@@ -26,7 +27,11 @@ class Button(QPushButton):
 
 class ButtonsGrid(QGridLayout):
     def __init__(
-            self, display: 'Display', info: 'Info', *args, **kwargs) -> None:
+            self,
+            display: 'Display',
+            info: 'Info',
+            window: 'MainWindow',
+            *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         self._gridMask = [
@@ -38,6 +43,7 @@ class ButtonsGrid(QGridLayout):
         ]
         self.display = display
         self.info = info
+        self.window = window
         self._equation = " "
         self._equationInitialValue = " "
         self._left = None
@@ -122,7 +128,7 @@ class ButtonsGrid(QGridLayout):
         self.display.clear()
 
         if not isValidNumber(displayText) and self._left is None:
-            return
+            self._showError('Você não digitou nada.')
 
         if self._left is None:
             self._left = float(displayText)
@@ -130,42 +136,67 @@ class ButtonsGrid(QGridLayout):
         self._op = buttonText
         self.equation = f'{self._left} {self._op} ??'
 
-    def _eq(self) -> None:
+    def _eq(self):
         displayText = self.display.text()
 
         if not isValidNumber(displayText):
+            self._showError('Conta incompleta.')
             return
 
         self._right = float(displayText)
-        self.equation = f'{self._left} {self._op} {self._right}'
         self._availableEquation()
 
     def _availableEquation(self) -> None:
         if self._left is not None and self._right is not None:
-            if self._op == '+':
-                result = self._left + self._right
-            elif self._op == '-':
-                result = self._left - self._right
-            elif self._op == '*':
-                result = self._left * self._right
-            elif self._op == '/' and self._right != 0:
-                result = self._left / self._right
-            elif self._op == '^':
-                try:
+            try:
+                if self._op == '+':
+                    result = self._left + self._right
+                elif self._op == '-':
+                    result = self._left - self._right
+                elif self._op == '*':
+                    result = self._left * self._right
+                elif self._op == '/':
+                    if self._right == 0:
+                        self._showError('Divisão por zero.')
+                    result = self._left / self._right
+                elif self._op == '^':
                     result = self._left ** self._right
-                except OverflowError:
-                    result = "Number large"
+                else:
+                    result = "ERROR"
                     self.display.clear()
-                    self.info.setText(str(result))
+                    self.info.setText(result)
                     return
-            else:
-                result = "ERROR"
+
+                # Limpa o display e exibe o resultado
+                self.display.clear()
+                self.info.setText(str(result))
+                self._left = float(result)
+                self._right = None
+
+            except OverflowError:
+                self.display.clear()
+                self._showError('Essa conta não pode ser realizada.')
+            except ZeroDivisionError as e:
+                self.display.clear()
+                self.info.setText(str(e))
+
+        else:
+            # Caso a operação ou o número da direita não esteja disponível
+            if self._right is None and self._op is None:
+                self.info.setText("")
                 self.display.clear()
 
-            self.display.clear()
-            self.info.setText(str(result))
-            self._left = float(result)
-            self._right = None
-        else:
-            self.info.setText("ERROR")
-            self.display.clear()
+    def _makeDialog(self, text):
+        msgBox = self.window.makeMsgBox()
+        msgBox.setText(text)
+        return msgBox
+
+    def _showError(self, text):
+        msgBox = self._makeDialog(text)
+        msgBox.setIcon(msgBox.Icon.Critical)
+        msgBox.exec()
+
+    def _showInfo(self, text):
+        msgBox = self._makeDialog(text)
+        msgBox.setIcon(msgBox.Icon.Information)
+        msgBox.exec()
