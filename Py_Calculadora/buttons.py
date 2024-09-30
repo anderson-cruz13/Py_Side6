@@ -82,7 +82,7 @@ class ButtonsGrid(QGridLayout):
             # slot = self._makeSlot(self.display.clear)
             self._connectButtonClicked(button, self._clear)
 
-        if text in '+-/*':
+        if text in '+-/*^':
             self._connectButtonClicked(
                 button,
                 self._makeSlot(self._operatorClicked, button)
@@ -147,6 +147,14 @@ class ButtonsGrid(QGridLayout):
                 result = self._left * self._right
             elif self._op == '/' and self._right != 0:
                 result = self._left / self._right
+            elif self._op == '^':
+                try:
+                    result = self._left ** self._right
+                except OverflowError:
+                    result = "Number large"
+                    self.display.clear()
+                    self.info.setText(str(result))
+                    return
             else:
                 result = "ERROR"
                 self.display.clear()
