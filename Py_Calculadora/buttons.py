@@ -97,7 +97,7 @@ class ButtonsGrid(QGridLayout):
         if text in '+-/*^':
             self._connectButtonClicked(
                 button,
-                self._makeSlot(self._configLeftOp, button)
+                self._makeSlot(self._configLeftOp, text)
             )
 
         if text == '=':
